@@ -1,0 +1,11 @@
+:root {
+	--astrozel-z-base: 0;
+	--astrozel-z-decorative: 1;
+	--astrozel-z-content: 10;
+	--astrozel-z-header: 40;
+	--astrozel-z-dropdown: 60;
+	--astrozel-z-scrim: 80;
+	--astrozel-z-sheet: 90;
+	--astrozel-z-sheet-nested: 95;
+	--astrozel-z-debug: 120;
+}

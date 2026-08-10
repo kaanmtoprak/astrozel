@@ -1,0 +1,473 @@
+@import "tailwindcss";
+@import "../styles/z-index.css";
+
+:root {
+	--background: #f5f8fc;
+	--foreground: #1b2a4a;
+	--primary: #5b6fbf;
+	--primary-foreground: #ffffff;
+	--secondary: #ebe6f7;
+	--muted: #eef2f8;
+	--border: #d5ddea;
+	--card: #ffffff;
+	--accent-gold: #b8954a;
+	--lavender: #d8cef0;
+	--sky-blue: #c8daf0;
+}
+
+@theme inline {
+	--color-background: var(--background);
+	--color-foreground: var(--foreground);
+	--color-primary: var(--primary);
+	--color-primary-foreground: var(--primary-foreground);
+	--color-secondary: var(--secondary);
+	--color-muted: var(--muted);
+	--color-border: var(--border);
+	--color-card: var(--card);
+	--color-accent-gold: var(--accent-gold);
+	--color-lavender: var(--lavender);
+	--color-sky-blue: var(--sky-blue);
+	--font-sans: var(--font-body);
+	--font-serif: var(--font-display);
+}
+
+html {
+	scroll-behavior: smooth;
+	width: 100%;
+	max-width: 100%;
+	overflow-x: clip;
+	overscroll-behavior-x: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto;
+	}
+
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+	}
+
+	.celestial-orbit-spin,
+	.celestial-orbit-spin-reverse,
+	.celestial-cloud-drift,
+	.celestial-cloud-drift-slow,
+	.celestial-twinkle,
+	.celestial-float,
+	.celestial-float-delayed {
+		animation: none !important;
+	}
+
+	.motion-reveal {
+		opacity: 1 !important;
+		transform: none !important;
+	}
+}
+
+body {
+	background: var(--background);
+	color: var(--foreground);
+	font-family: var(--font-body), "Segoe UI", Tahoma, sans-serif;
+	width: 100%;
+	max-width: 100%;
+	overflow-x: clip;
+	overscroll-behavior-x: none;
+	/* iOS: avoid focus zoom rubber-band sideways */
+	position: relative;
+}
+
+.astrozel-popover {
+	z-index: var(--astrozel-z-dropdown);
+}
+
+.astrozel-select-content {
+	z-index: var(--astrozel-z-sheet-nested);
+}
+
+.astrozel-dropdown-surface {
+	z-index: var(--astrozel-z-dropdown);
+}
+
+.astrozel-mobile-sheet {
+	z-index: var(--astrozel-z-sheet);
+}
+
+.astrozel-field-trigger {
+	touch-action: manipulation;
+	-webkit-tap-highlight-color: transparent;
+}
+
+.astrozel-scroll-y {
+	touch-action: pan-y;
+	overscroll-behavior: contain;
+	-webkit-overflow-scrolling: touch;
+}
+
+::selection {
+	background: color-mix(in srgb, var(--lavender) 55%, white);
+	color: var(--foreground);
+}
+
+/* Scroll reveal — only after client marks ready */
+.motion-reveal {
+	opacity: 0;
+	transform: translateY(12px);
+	transition:
+		opacity 0.55s ease var(--reveal-delay, 0ms),
+		transform 0.55s ease var(--reveal-delay, 0ms);
+}
+
+.motion-reveal-visible {
+	opacity: 1;
+	transform: none;
+}
+
+/* Celestial motion */
+@keyframes celestial-twinkle {
+	0%,
+	100% {
+		opacity: 0.45;
+	}
+	50% {
+		opacity: 1;
+	}
+}
+
+@keyframes celestial-drift {
+	0% {
+		transform: translateX(0);
+	}
+	50% {
+		transform: translateX(10px);
+	}
+	100% {
+		transform: translateX(0);
+	}
+}
+
+@keyframes celestial-orbit {
+	from {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+@keyframes celestial-float {
+	0%,
+	100% {
+		transform: translateY(0);
+	}
+	50% {
+		transform: translateY(-8px);
+	}
+}
+
+.celestial-twinkle {
+	animation: celestial-twinkle 3.8s ease-in-out infinite;
+}
+
+.celestial-twinkle-delay-0 {
+	animation-delay: 0s;
+}
+.celestial-twinkle-delay-1 {
+	animation-delay: 0.45s;
+}
+.celestial-twinkle-delay-2 {
+	animation-delay: 0.9s;
+}
+.celestial-twinkle-delay-3 {
+	animation-delay: 1.35s;
+}
+.celestial-twinkle-delay-4 {
+	animation-delay: 1.8s;
+}
+.celestial-twinkle-delay-5 {
+	animation-delay: 2.25s;
+}
+.celestial-twinkle-delay-6 {
+	animation-delay: 2.7s;
+}
+
+.celestial-cloud-drift {
+	animation: celestial-drift 28s ease-in-out infinite;
+}
+
+.celestial-cloud-drift-slow {
+	animation: celestial-drift 40s ease-in-out infinite reverse;
+}
+
+.celestial-orbit-spin {
+	transform-origin: 160px 160px;
+	animation: celestial-orbit 72s linear infinite;
+}
+
+.celestial-orbit-spin-reverse {
+	transform-origin: 160px 160px;
+	animation: celestial-orbit 96s linear infinite reverse;
+}
+
+.celestial-float {
+	animation: celestial-float 7s ease-in-out infinite;
+}
+
+.celestial-float-delayed {
+	animation: celestial-float 9s ease-in-out infinite;
+	animation-delay: 1.2s;
+}
+
+.astrozel-scroll {
+	scrollbar-width: thin;
+	scrollbar-color: color-mix(in srgb, var(--primary) 35%, white) transparent;
+}
+
+.astrozel-scroll::-webkit-scrollbar {
+	width: 6px;
+}
+
+.astrozel-scroll::-webkit-scrollbar-thumb {
+	border-radius: 999px;
+	background: color-mix(in srgb, var(--primary) 35%, white);
+}
+
+/* Astrozel DayPicker */
+.astrozel-day-picker {
+	--rdp-accent-color: var(--primary);
+	--rdp-accent-background-color: var(--secondary);
+	--rdp-today-color: var(--accent-gold);
+	--rdp-day-height: 2.6rem;
+	--rdp-day-width: 2.6rem;
+	--rdp-day_button-height: 2.5rem;
+	--rdp-day_button-width: 2.5rem;
+	--rdp-day_button-border-radius: 0.9rem;
+	--rdp-selected-border: 2px solid var(--primary);
+	--rdp-outside-opacity: 0.35;
+	font-size: 0.875rem;
+	color: var(--foreground);
+}
+
+.astrozel-day-picker .rdp-root {
+	width: 100%;
+}
+
+.astrozel-day-picker .rdp-months {
+	justify-content: center;
+}
+
+.astrozel-day-picker .rdp-month_caption,
+.astrozel-day-picker .rdp-dropdowns {
+	display: flex;
+	width: 100%;
+	gap: 0.5rem;
+	align-items: center;
+}
+
+.astrozel-day-picker .rdp-dropdowns {
+	flex: 1;
+	position: relative;
+	z-index: 1;
+}
+
+.astrozel-day-picker .rdp-caption_label {
+	display: none;
+}
+
+.astrozel-day-picker .rdp-nav {
+	pointer-events: none;
+}
+
+.astrozel-day-picker .rdp-button_previous,
+.astrozel-day-picker .rdp-button_next {
+	pointer-events: auto;
+	border-radius: 0.85rem;
+	border: 1px solid var(--border);
+	background: var(--card);
+}
+
+.astrozel-day-picker .rdp-button_previous:focus-visible,
+.astrozel-day-picker .rdp-button_next:focus-visible,
+.astrozel-day-picker .rdp-day_button:focus-visible {
+	outline: 2px solid var(--primary);
+	outline-offset: 2px;
+}
+
+.astrozel-day-picker .rdp-day_button {
+	min-height: 40px;
+	min-width: 40px;
+}
+
+.astrozel-day-picker .rdp-day_button:hover:not([disabled]):not([aria-selected="true"]) {
+	background: color-mix(in srgb, var(--lavender) 45%, white);
+}
+
+.astrozel-day-picker .rdp-selected .rdp-day_button {
+	background: linear-gradient(
+		135deg,
+		color-mix(in srgb, var(--primary) 92%, white),
+		color-mix(in srgb, var(--lavender) 55%, var(--primary))
+	);
+	color: var(--primary-foreground);
+	border-color: transparent;
+	font-weight: 600;
+	box-shadow: 0 0 0 1px color-mix(in srgb, var(--primary) 35%, white);
+}
+
+.astrozel-day-picker .rdp-today:not(.rdp-selected) .rdp-day_button {
+	border: 1.5px solid color-mix(in srgb, var(--accent-gold) 70%, white);
+	color: var(--foreground);
+}
+
+.astrozel-day-picker .rdp-disabled {
+	opacity: 0.35;
+}
+
+/* Teknik detay / native details */
+.astrozel-details > summary::-webkit-details-marker {
+	display: none;
+}
+
+.astrozel-details > summary::marker {
+	content: "";
+}
+
+/* Synastry sky + decorative motion (prefers-reduced-motion respected) */
+.synastry-sky-gradient {
+	background:
+		radial-gradient(
+			ellipse 80% 55% at 50% -10%,
+			color-mix(in srgb, var(--sky-blue) 55%, white),
+			transparent 70%
+		),
+		linear-gradient(
+			180deg,
+			color-mix(in srgb, var(--lavender) 22%, white) 0%,
+			color-mix(in srgb, var(--sky-blue) 18%, white) 42%,
+			var(--background) 100%
+		);
+}
+
+.synastry-sky-nebula {
+	filter: blur(42px);
+	opacity: 0.45;
+}
+
+.synastry-sky-nebula-a {
+	background: color-mix(in srgb, var(--sky-blue) 70%, transparent);
+}
+
+.synastry-sky-nebula-b {
+	background: color-mix(in srgb, var(--lavender) 65%, transparent);
+}
+
+.synastry-sky-nebula-c {
+	background: color-mix(in srgb, var(--sky-blue) 40%, transparent);
+	opacity: 0.28;
+}
+
+.synastry-sky-star {
+	animation: synastry-star-pulse 7s ease-in-out infinite;
+}
+
+.synastry-sky-orbit-a {
+	transform-origin: 72px 22px;
+	animation: synastry-orbit-spin 18s linear infinite;
+}
+
+.synastry-sky-orbit-b {
+	transform-origin: 28px 78px;
+	animation: synastry-orbit-spin 22s linear infinite reverse;
+}
+
+.synastry-sky-orbit-c {
+	transform-origin: 50px 46px;
+	animation: synastry-orbit-spin 16s linear infinite;
+}
+
+.synastry-orbit-ring {
+	animation: synastry-orbit-spin 16s linear infinite;
+}
+
+.synastry-score-orbit {
+	animation: synastry-orbit-spin 18s linear infinite;
+}
+
+.synastry-score-fill {
+	transform-origin: left center;
+	animation: synastry-fill-once 700ms ease-out both;
+}
+
+.synastry-cta-button {
+	background-image: linear-gradient(
+		135deg,
+		var(--primary),
+		color-mix(in srgb, var(--primary) 78%, #1b2a4a)
+	);
+	background-color: var(--primary);
+}
+
+.synastry-cta-button:hover {
+	background-image: linear-gradient(
+		135deg,
+		color-mix(in srgb, var(--primary) 92%, #1b2a4a),
+		color-mix(in srgb, var(--primary) 70%, #1b2a4a)
+	);
+}
+
+@media (max-width: 640px) {
+	.synastry-sky-star-dense,
+	.synastry-sky-orbit-c,
+	.synastry-sky-nebula-c {
+		opacity: 0;
+	}
+
+	.synastry-sky-nebula {
+		filter: blur(28px);
+		opacity: 0.32;
+	}
+}
+
+@keyframes synastry-orbit-spin {
+	from {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+@keyframes synastry-star-pulse {
+	0%,
+	100% {
+		opacity: 0.35;
+	}
+	50% {
+		opacity: 0.75;
+	}
+}
+
+@keyframes synastry-fill-once {
+	from {
+		transform: scaleX(0);
+	}
+	to {
+		transform: scaleX(1);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.synastry-orbit-ring,
+	.synastry-score-orbit,
+	.synastry-score-fill,
+	.synastry-sky-star,
+	.synastry-sky-orbit-a,
+	.synastry-sky-orbit-b,
+	.synastry-sky-orbit-c {
+		animation: none !important;
+	}
+}
+
