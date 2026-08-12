@@ -10,18 +10,18 @@ import { buttonClassName } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 const navItems = [
+	{ href: "/bugunun-gokyuzu", label: "Gökyüzü" },
+	{ href: "/cift-uyumu", label: "Çift Uyumu" },
 	{ href: "/rehber", label: "Rehber" },
 	{ href: "/hakkinda", label: "Hakkında" },
-	{ href: "/sss", label: "SSS" },
-	{ href: "/cift-uyumu", label: "Çift Uyumu" },
 ] as const;
 
 const mobileNavItems = [
 	{ href: "/dogum-haritasi", label: "Harita Oluştur" },
+	{ href: "/bugunun-gokyuzu", label: "Bugünün Gökyüzü" },
 	{ href: "/cift-uyumu", label: "Çift Uyumu" },
 	{ href: "/rehber", label: "Rehber" },
 	{ href: "/hakkinda", label: "Hakkında" },
-	{ href: "/sss", label: "SSS" },
 ] as const;
 
 export function Header() {

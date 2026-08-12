@@ -1,4 +1,5 @@
 import { FinalCtaSection } from "@/components/home/final-cta-section";
+import { DailySkySection } from "@/components/home/daily-sky-section";
 import { GuideSection } from "@/components/home/guide-section";
 import {
 	HeroBirthChartForm,
@@ -14,6 +15,7 @@ export default function HomePage() {
 			<HeroBirthChartForm />
 			<PrecisionSection />
 			<PrivacyTrustSection />
+			<DailySkySection />
 			<GuideSection />
 			<FinalCtaSection />
 		</main>

@@ -9,12 +9,18 @@
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
 	"name": "astrozel",
-	"main": ".open-next/worker.js",
+	// Wraps OpenNext to set Daily Sky HTML Cache-Control for Workers Cache.
+	"main": "cloudflare/worker.ts",
 	"compatibility_date": "2026-08-01",
 	"compatibility_flags": [
 		"nodejs_compat",
 		"global_fetch_strictly_public"
 	],
+	// Workers Cache: HIT returns HTML without invoking the Worker.
+	// Cacheability is controlled per-response via Cache-Control / CDN-Cache-Control.
+	"cache": {
+		"enabled": true
+	},
 	"assets": {
 		"binding": "ASSETS",
 		"directory": ".open-next/assets"

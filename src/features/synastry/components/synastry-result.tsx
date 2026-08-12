@@ -1,7 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
+import {
+	CompositeErrorState,
+	CompositeResult,
+} from "@/features/synastry/composite/components/composite-result";
 import { CompatibilityCategories } from "@/features/synastry/components/compatibility-categories";
 import { CompatibilityScore } from "@/features/synastry/components/compatibility-score";
 import { PersonGlance } from "@/features/synastry/components/person-glance";
@@ -14,9 +18,13 @@ import { SynastryError } from "@/features/synastry/components/synastry-error";
 import { SYNASTRY_DRAFT_STORAGE_KEY } from "@/features/synastry/constants/storage";
 import type { SynastryResult } from "@/features/synastry/types/synastry";
 import type { SynastryDraft } from "@/features/synastry/types/synastry-form";
-import { getSynastryDraft, markSynastryRestoreOnce } from "@/features/synastry/utils/synastry-draft";
+import {
+	getSynastryDraft,
+	markSynastryRestoreOnce,
+} from "@/features/synastry/utils/synastry-draft";
 import { PdfActions } from "@/features/pdf/components/pdf-actions";
 import { buttonClassName } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 type CalcState =
 	| { status: "idle" }
@@ -26,6 +34,8 @@ type CalcState =
 
 type ApiSuccess = { result: SynastryResult };
 type ApiError = { error?: { message?: string } };
+
+type ResultView = "synastry" | "composite";
 
 let draftSnapshotRaw: string | null | undefined = undefined;
 let draftSnapshotValue: SynastryDraft | null = null;
@@ -64,6 +74,81 @@ function useIsClient() {
 	return useSyncExternalStore(subscribeIsClient, () => true, () => false);
 }
 
+function ResultViewSwitch({
+	view,
+	onChange,
+}: {
+	view: ResultView;
+	onChange: (next: ResultView) => void;
+}) {
+	const labelId = useId();
+
+	return (
+		<div className="space-y-2">
+			<p id={labelId} className="sr-only">
+				Sonuç görünümü
+			</p>
+			<div
+				role="tablist"
+				aria-labelledby={labelId}
+				className="grid grid-cols-2 gap-2 rounded-2xl border border-border bg-muted/50 p-1"
+			>
+				<button
+					type="button"
+					role="tab"
+					aria-selected={view === "synastry"}
+					className={cn(
+						"inline-flex min-h-11 touch-manipulation items-center justify-center rounded-xl px-3 text-sm font-medium transition-colors",
+						"focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
+						view === "synastry"
+							? "bg-card text-foreground shadow-sm"
+							: "text-foreground/70 hover:bg-card/60 hover:text-foreground",
+					)}
+					onClick={() => onChange("synastry")}
+				>
+					Çift Uyumu
+				</button>
+				<button
+					type="button"
+					role="tab"
+					aria-selected={view === "composite"}
+					className={cn(
+						"inline-flex min-h-11 touch-manipulation items-center justify-center rounded-xl px-3 text-sm font-medium transition-colors",
+						"focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
+						view === "composite"
+							? "bg-card text-foreground shadow-sm"
+							: "text-foreground/70 hover:bg-card/60 hover:text-foreground",
+					)}
+					onClick={() => onChange("composite")}
+				>
+					İlişki Haritası
+				</button>
+			</div>
+		</div>
+	);
+}
+
+function SynastryPanels({ result }: { result: SynastryResult }) {
+	return (
+		<div className="space-y-10">
+			<CompatibilityScore
+				score={result.overallScore}
+				personALabel={result.personA.label}
+				personBLabel={result.personB.label}
+			/>
+			<PdfActions input={{ kind: "synastry", result }} />
+			<PersonGlance personA={result.personA} personB={result.personB} />
+			<CompatibilityCategories details={result.categoryDetails} />
+			<RelationshipOverview paragraphs={result.overview} />
+			<RelationshipStrengths items={result.strengths} />
+			<RelationshipChallenges items={result.challenges} />
+			<SynastryAspects aspects={result.aspects} />
+			<SynastryDisclaimer />
+			<PdfActions input={{ kind: "synastry", result }} />
+		</div>
+	);
+}
+
 export function SynastryResultView() {
 	const isClient = useIsClient();
 	const draft = useSyncExternalStore(
@@ -73,6 +158,7 @@ export function SynastryResultView() {
 	);
 	const [calcState, setCalcState] = useState<CalcState>({ status: "idle" });
 	const [retryToken, setRetryToken] = useState(0);
+	const [view, setView] = useState<ResultView>("synastry");
 	const requestIdRef = useRef(0);
 
 	useEffect(() => {
@@ -233,24 +319,21 @@ export function SynastryResultView() {
 					</span>
 				</h1>
 				<p className="text-sm text-foreground/65 sm:text-base">
-					İki doğum haritası arasındaki sembolik bağlantılar
+					{view === "synastry"
+						? "İki doğum haritası arasındaki sembolik bağlantılar"
+						: "İlişkinin ortak sembolik yapısı (composite)"}
 				</p>
 			</header>
 
-			<CompatibilityScore
-				score={result.overallScore}
-				personALabel={result.personA.label}
-				personBLabel={result.personB.label}
-			/>
-			<PdfActions input={{ kind: "synastry", result }} />
-			<PersonGlance personA={result.personA} personB={result.personB} />
-			<CompatibilityCategories details={result.categoryDetails} />
-			<RelationshipOverview paragraphs={result.overview} />
-			<RelationshipStrengths items={result.strengths} />
-			<RelationshipChallenges items={result.challenges} />
-			<SynastryAspects aspects={result.aspects} />
-			<SynastryDisclaimer />
-			<PdfActions input={{ kind: "synastry", result }} />
+			<ResultViewSwitch view={view} onChange={setView} />
+
+			{view === "synastry" ? (
+				<SynastryPanels result={result} />
+			) : result.composite ? (
+				<CompositeResult composite={result.composite} />
+			) : (
+				<CompositeErrorState />
+			)}
 
 			{result.warnings.length > 0 ? (
 				<ul className="space-y-1 text-xs text-foreground/55">

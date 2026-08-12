@@ -1,4 +1,5 @@
 import type { ZodiacSign } from "@/features/astrology/types/astrology";
+import type { CompositeChartResult } from "@/features/synastry/composite/types/composite";
 
 export type SynastryBodyKey =
 	| "sun"
@@ -123,4 +124,6 @@ export interface SynastryResult {
 	challenges: SynastryInsight[];
 	aspects: SynastryAspect[];
 	warnings: string[];
+	/** Optional midpoint composite; omitted when composite transform fails. */
+	composite?: CompositeChartResult;
 }

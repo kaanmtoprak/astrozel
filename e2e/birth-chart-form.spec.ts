@@ -138,6 +138,8 @@ test.describe("Doğum haritası formu", () => {
 	test("draft tarihi bir gün kaymadan gösterilir", async ({ page }) => {
 		const consoleGuard = attachConsoleErrorCollector(page);
 		await page.addInitScript(() => {
+			// Form yalnızca restore-once bayrağı varken draft’ı geri yükler.
+			window.sessionStorage.setItem("astrozel.birth-chart-restore-once", "1");
 			window.sessionStorage.setItem(
 				"astrozel.birth-chart-draft.v2",
 				JSON.stringify({

@@ -1,9 +1,15 @@
 import { defineCloudflareConfig } from "@opennextjs/cloudflare";
+import staticAssetsIncrementalCache from "@opennextjs/cloudflare/overrides/incremental-cache/static-assets-incremental-cache";
+import { withRegionalCache } from "@opennextjs/cloudflare/overrides/incremental-cache/regional-cache";
 
+/**
+ * Prerendered routes are read from Workers static assets (no R2/KV).
+ * Regional Cache API avoids repeating the assets lookup in the same colo.
+ * No ISR/revalidateTag is used, so a read-only incremental cache is enough.
+ */
 export default defineCloudflareConfig({
-	// Uncomment to enable R2 cache,
-	// It should be imported as:
-	// `import r2IncrementalCache from "@opennextjs/cloudflare/overrides/incremental-cache/r2-incremental-cache";`
-	// See https://opennext.js.org/cloudflare/caching for more details
-	// incrementalCache: r2IncrementalCache,
+	incrementalCache: withRegionalCache(staticAssetsIncrementalCache, {
+		mode: "long-lived",
+	}),
+	enableCacheInterception: true,
 });

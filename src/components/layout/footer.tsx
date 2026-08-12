@@ -4,6 +4,7 @@ import { PrivacyOptionsButton } from "@/components/layout/privacy-options-button
 import { siteConfig } from "@/config/site";
 
 const footerLinks = [
+	{ href: "/bugunun-gokyuzu", label: "Bugünün Gökyüzü" },
 	{ href: "/rehber", label: "Astroloji Rehberi" },
 	{ href: "/hakkinda", label: "Hakkında" },
 	{ href: "/sss", label: "SSS" },

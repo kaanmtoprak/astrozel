@@ -10,8 +10,8 @@ export const sinastriNedirArticle: ArticleDefinition = {
 	cardDescription:
 		"İki doğum haritasını karşılaştırarak ilişki dinamiklerine sembolik bakış.",
 	publishedAt: "2026-08-04",
-	updatedAt: "2026-08-04",
-	readingTime: 8,
+	updatedAt: "2026-08-10",
+	readingTime: 9,
 	icon: "synastry",
 	relatedSlugs: [
 		"dogum-haritasi-nedir",
@@ -20,11 +20,11 @@ export const sinastriNedirArticle: ArticleDefinition = {
 		"yukselen-burc-nedir",
 	],
 	toolCta: {
-		title: "Çift uyumunu hesapla",
+		title: "Çift Uyumu ve İlişki Haritanızı Görün",
 		description:
-			"İki kişinin doğum bilgileriyle sinastri bağlantılarını ve sembolik uyum özetini görün.",
+			"İki kişinin doğum bilgileriyle sinastri bağlantılarını ve midpoint İlişki Haritası yorumunu birlikte keşfedin.",
 		href: "/cift-uyumu",
-		label: "Çift Uyumunu Hesapla",
+		label: "Çift Uyumu ve İlişki Haritanızı Görün",
 	},
 	sections: [
 		{
@@ -98,6 +98,19 @@ export const sinastriNedirArticle: ArticleDefinition = {
 				"Üçgen ve sekstil gibi açılar çoğu zaman akış ve destekle; kare ve karşıtlık ise sürtünme ve farkındalıkla ilişkilendirilir. Kavuşum, gezegen çiftine göre hem yoğun kaynaşma hem baskınlaşma gibi okunabilir.",
 				"[Açı türlerinin özeti](/rehber/astrolojide-acilar) için ayrı rehbere bakabilirsiniz. Önemli olan etiketi ezberlemek değil, hangi ihtiyaçların çatıştığını veya beslendiğini görmektir.",
 			],
+		},
+		{
+			id: "composite",
+			title: "Composite / İlişki Haritası nedir?",
+			paragraphs: [
+				"Composite (İlişki Haritası), iki doğum haritasındaki aynı gezegen noktalarının orta konumlarından (midpoint) üretilen ayrı bir haritadır. Sinastri “iki kişi birbirini nasıl etkiler?” sorusuna bakarken composite, ilişkiyi ortak bir bütün gibi ele alır: “bu ilişkinin ortak ritmi nasıl?”",
+				"Astrozel’de İlişki Haritası shortest-arc midpoint yöntemiyle hesaplanır; yeni doğum yeri veya sahte saat üretilmez. Composite bir uyum puanı vermez; burç yerleşimleri ve major açılar üzerinden ilişkinin sembolik yapısını yorumlar.",
+				"Sinastri ile composite birbirinin yerine geçmez. Birlikte okunduklarında hem kişiler arası etkileşimi hem de ilişkinin ortak dinamiğini daha dengeli görmenize yardımcı olabilir.",
+			],
+			callout: {
+				type: "info",
+				text: "İlişki Haritası kader, evlilik veya ayrılık tahmini değildir. Composite skor üretmez; sinastrinin karşılaştırma dilinden farklı, ortak-bütün yorumudur.",
+			},
 		},
 		{
 			id: "zor-aci",

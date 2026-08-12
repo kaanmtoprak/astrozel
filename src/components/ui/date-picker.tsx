@@ -29,7 +29,27 @@ export type DatePickerProps = {
 	describedBy?: string;
 	disabled?: boolean;
 	className?: string;
+	/**
+	 * Inclusive calendar lower bound.
+	 * Defaults to the birth-chart minimum so existing forms stay unchanged.
+	 */
+	minDate?: Date;
+	/**
+	 * Inclusive calendar upper bound.
+	 * Defaults to today (birth-chart maximum) so existing forms stay unchanged.
+	 */
+	maxDate?: Date;
+	/** Trigger / empty-state label. Defaults to birth-date copy. */
+	placeholder?: string;
+	dialogTitle?: string;
+	dialogDescription?: string;
+	/** When false, hides the clear action. Defaults to true. */
+	allowClear?: boolean;
 };
+
+const DEFAULT_PLACEHOLDER = "Doğum tarihini seç";
+const DEFAULT_DIALOG_TITLE = "Doğum tarihi";
+const DEFAULT_DIALOG_DESCRIPTION = "Ay, yıl ve günü seç.";
 
 type SheetView = "calendar" | "month" | "year";
 
@@ -107,13 +127,17 @@ function MobileDateSheetBody({
 	value,
 	onChange,
 	onClose,
+	startMonth,
+	endMonth,
+	placeholder,
 }: {
 	value: string;
 	onChange: (value: string) => void;
 	onClose: () => void;
+	startMonth: Date;
+	endMonth: Date;
+	placeholder: string;
 }) {
-	const startMonth = useMemo(() => getMinBirthDate(), []);
-	const endMonth = useMemo(() => getMaxBirthDate(), []);
 	const selectedDate = useMemo(() => parseDateOnly(value), [value]);
 	const [view, setView] = useState<SheetView>("calendar");
 	const [displayMonth, setDisplayMonth] = useState<Date>(
@@ -143,7 +167,7 @@ function MobileDateSheetBody({
 
 	const displayLabel = selectedDate
 		? formatDateOnlyDisplay(value)
-		: "Doğum tarihini seç";
+		: placeholder;
 
 	return (
 		<div className="space-y-3">
@@ -310,16 +334,25 @@ export function DatePicker({
 	describedBy,
 	disabled = false,
 	className,
+	minDate,
+	maxDate,
+	placeholder = DEFAULT_PLACEHOLDER,
+	dialogTitle = DEFAULT_DIALOG_TITLE,
+	dialogDescription = DEFAULT_DIALOG_DESCRIPTION,
+	allowClear = true,
 }: DatePickerProps) {
 	const isMobile = useIsMobileOverlay();
 	const [open, setOpen] = useState(false);
 
 	const selectedDate = useMemo(() => parseDateOnly(value), [value]);
-	const startMonth = useMemo(() => getMinBirthDate(), []);
-	const endMonth = useMemo(() => getMaxBirthDate(), []);
+	const startMonth = useMemo(
+		() => minDate ?? getMinBirthDate(),
+		[minDate],
+	);
+	const endMonth = useMemo(() => maxDate ?? getMaxBirthDate(), [maxDate]);
 	const displayLabel = selectedDate
 		? formatDateOnlyDisplay(value)
-		: "Doğum tarihini seç";
+		: placeholder;
 
 	const trigger = (
 		<button
@@ -331,7 +364,7 @@ export function DatePicker({
 			aria-haspopup="dialog"
 			aria-expanded={open}
 			aria-label={
-				selectedDate ? `Doğum tarihi: ${displayLabel}` : "Doğum tarihini seç"
+				selectedDate ? `${dialogTitle}: ${displayLabel}` : placeholder
 			}
 			data-invalid={hasError ? "true" : undefined}
 			onBlur={onBlur}
@@ -374,8 +407,8 @@ export function DatePicker({
 				<MobileSheet
 					open={open}
 					onOpenChange={setOpen}
-					title="Doğum tarihi"
-					description="Ay, yıl ve günü seç."
+					title={dialogTitle}
+					description={dialogDescription}
 					variant="bottom"
 					testId="date-sheet"
 					footer={
@@ -387,16 +420,18 @@ export function DatePicker({
 							>
 								Kapat
 							</button>
-							<button
-								type="button"
-								className="min-h-11 rounded-xl px-4 text-sm font-medium text-primary touch-manipulation hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-								onClick={() => {
-									onChange("");
-									setOpen(false);
-								}}
-							>
-								Temizle
-							</button>
+							{allowClear ? (
+								<button
+									type="button"
+									className="min-h-11 rounded-xl px-4 text-sm font-medium text-primary touch-manipulation hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+									onClick={() => {
+										onChange("");
+										setOpen(false);
+									}}
+								>
+									Temizle
+								</button>
+							) : null}
 						</div>
 					}
 				>
@@ -404,6 +439,9 @@ export function DatePicker({
 						value={value}
 						onChange={onChange}
 						onClose={() => setOpen(false)}
+						startMonth={startMonth}
+						endMonth={endMonth}
+						placeholder={placeholder}
 					/>
 				</MobileSheet>
 			</>
@@ -418,7 +456,7 @@ export function DatePicker({
 					align="start"
 					sideOffset={8}
 					collisionPadding={16}
-					aria-label="Doğum tarihi seçici"
+					aria-label={dialogTitle}
 					className={cn(
 						"astrozel-popover w-[min(calc(100%-1.5rem),24rem)] max-w-[calc(100%-1.5rem)] rounded-3xl border border-border/90 bg-card p-4 shadow-xl outline-none",
 					)}
@@ -429,7 +467,7 @@ export function DatePicker({
 							Seçilen tarih
 						</p>
 						<p className="mt-1 font-serif text-xl text-foreground">
-							{selectedDate ? displayLabel : "Doğum tarihini seç"}
+							{selectedDate ? displayLabel : placeholder}
 						</p>
 					</div>
 
@@ -466,16 +504,18 @@ export function DatePicker({
 						>
 							Kapat
 						</button>
-						<button
-							type="button"
-							className="rounded-xl px-3 py-2 text-sm font-medium text-primary transition-colors hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-							onClick={() => {
-								onChange("");
-								setOpen(false);
-							}}
-						>
-							Temizle
-						</button>
+						{allowClear ? (
+							<button
+								type="button"
+								className="rounded-xl px-3 py-2 text-sm font-medium text-primary transition-colors hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+								onClick={() => {
+									onChange("");
+									setOpen(false);
+								}}
+							>
+								Temizle
+							</button>
+						) : null}
 					</div>
 				</Popover.Content>
 			</Popover.Portal>

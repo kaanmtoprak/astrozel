@@ -3,6 +3,7 @@ import "server-only";
 import { AstrologyCalculationError } from "@/features/astrology/providers/celestine-astrology-provider";
 import { calculateNatalChart } from "@/features/astrology/services/calculate-natal-chart";
 import type { NatalChartResult } from "@/features/astrology/types/natal-chart";
+import { calculateCompositeChart } from "@/features/synastry/composite/services/calculate-composite-chart";
 import { SYNASTRY_CALCULATION_VERSION } from "@/features/synastry/constants/synastry-settings";
 import type { SynastryRequest } from "@/features/synastry/schemas/synastry-request-schema";
 import type {
@@ -105,6 +106,13 @@ export async function calculateSynastry(
 		}
 	}
 
+	let composite: SynastryResult["composite"];
+	try {
+		composite = calculateCompositeChart(chartA, chartB);
+	} catch {
+		composite = undefined;
+	}
+
 	return {
 		metadata: {
 			calculationVersion: SYNASTRY_CALCULATION_VERSION,
@@ -121,5 +129,6 @@ export async function calculateSynastry(
 		challenges,
 		aspects: highlighted,
 		warnings,
+		composite,
 	};
 }

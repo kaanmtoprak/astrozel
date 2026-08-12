@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { ContentPage } from "@/components/content/content-page";
 import { ContentSection } from "@/components/content/content-section";
-import { siteConfig } from "@/config/site";
 
 export const metadata: Metadata = {
 	title: "İletişim",
@@ -16,23 +15,18 @@ export default function ContactPage() {
 			description="Şimdilik yalnızca bilgilendirme amaçlı bir sayfa."
 		>
 			<ContentSection>
-				{siteConfig.contactEmail ? (
-					<p>
-						Bize{" "}
-						<a
-							href={`mailto:${siteConfig.contactEmail}`}
-							className="underline underline-offset-2 hover:text-foreground"
-						>
-							{siteConfig.contactEmail}
-						</a>{" "}
-						adresinden ulaşabilirsiniz.
-					</p>
-				) : (
-					<p>
-						İletişim adresi production alan adı yapılandırması tamamlandığında
-						bu sayfaya eklenecektir.
-					</p>
-				)}
+				<p>
+					Kaan Toprak hakkında daha fazla bilgi ve iletişim kanalları için{" "}
+					<a
+						href="https://kaantoprak.net"
+						target="_blank"
+						rel="noopener noreferrer"
+						className="underline underline-offset-2 hover:text-foreground"
+					>
+						kaantoprak.net
+					</a>{" "}
+					adresini ziyaret edebilirsiniz.
+				</p>
 			</ContentSection>
 		</ContentPage>
 	);

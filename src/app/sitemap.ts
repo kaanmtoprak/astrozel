@@ -7,6 +7,7 @@ const publicPaths = [
 	"/",
 	"/dogum-haritasi",
 	"/cift-uyumu",
+	"/bugunun-gokyuzu",
 	"/rehber",
 	"/hakkinda",
 	"/sss",
@@ -26,13 +27,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
 			path === "/" ||
 			path === "/dogum-haritasi" ||
 			path === "/cift-uyumu" ||
+			path === "/bugunun-gokyuzu" ||
 			path === "/rehber"
 				? "weekly"
 				: "monthly",
 		priority:
 			path === "/"
 				? 1
-				: path === "/dogum-haritasi" || path === "/cift-uyumu"
+				: path === "/dogum-haritasi" ||
+					  path === "/cift-uyumu" ||
+					  path === "/bugunun-gokyuzu"
 					? 0.9
 					: path === "/rehber"
 						? 0.8
